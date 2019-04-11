@@ -25,7 +25,7 @@ SECRET_KEY = '9b+wpu5p6mcmkml27ombi3c$dapn8lvg=m8q^(i#ki-s^0bagd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.4']
+ALLOWED_HOSTS = ['192.168.1.103']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'testdjangodb',
 ]
 
 MIDDLEWARE = [
@@ -78,6 +79,12 @@ DATABASES = {
     'default': {
         # 'ENGINE': 'django.db.backends.sqlite3',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',  # pg的数据库接口模块，不同的数据库 接口模块不同，需查找
+        'NAME': 'pythondb',  # 数据库名称
+        'USER': 'luckily18894',  # 拥有者，这个一般没修改
+        'PASSWORD': 'luCKi1y18894',  # 密码，自己设定的
+        'HOST': '192.168.1.110',  # 默认的就没写
+        'PORT': '',
     }
 }
 
@@ -106,13 +113,14 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

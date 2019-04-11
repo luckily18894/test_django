@@ -15,9 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from views import index
+from views import index, device_mgmt
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index.index),
+    path('add_device', device_mgmt.add_device),
+    path('show_device', device_mgmt.show_device),
 ]
