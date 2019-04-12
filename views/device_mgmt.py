@@ -1,9 +1,10 @@
 # -*- coding=utf-8 -*-
 
 from testdjangodb.models import Device
-from testdjangodb.forms import DeviceForm
+from testdjangodb.forms import DeviceForm, EditDeviceForm
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import permission_required
 
 
 def add_device(request):
@@ -40,8 +41,8 @@ def show_device(request):
     devices_list = []
     for x in result:
         # 产生设备信息的字典
-        device_dict = {'id_delete': "/delete_device/" + str(x.id) + "/",
-                       'id_edit': "/edit_device/" + str(x.id) + "/",
+        device_dict = {'id_delete': "/delete_device/" + str(x.id),
+                       'id_edit': "/edit_device/" + str(x.id),
                        'id': x.id,
                        'name': x.name,
                        'ip_address': x.ip_address,
@@ -56,6 +57,62 @@ def show_device(request):
         # 提取设备详细信息,并写入字典
         devices_list.append(device_dict)
     return render(request, 'show_device.html', {'devices_list': devices_list})
+
+
+def get_device_info(id):
+    # 设置过滤条件,获取特定设备信息, objects.get(id=id)
+    result = Device.objects.get(id=id)
+    device_dict = {}
+    device_dict['id'] = result.id
+    device_dict['name'] = result.name
+    device_dict['ip_address'] = result.ip_address
+    device_dict['ro_community'] = result.ro_community
+    device_dict['rw_community'] = result.rw_community
+    device_dict['username'] = result.username
+    device_dict['password'] = result.password
+    device_dict['enable_password'] = result.enable_password
+    device_dict['device_type'] = result.device_type
+    device_dict['create_date'] = result.create_date
+    # 返回特定设备详细信息
+    return device_dict
+
+
+# @permission_required('pythondb.change_testdjangodb_device')
+def edit_device(request, id):
+    # 首先获取特定ID设备的详细信息
+    infodict = get_device_info(id)
+    if request.method == 'POST':
+        form = EditDeviceForm(request.POST)
+        # 如果请求为POST,并且Form校验通过,把修改过的设备信息写入数据库
+        if form.is_valid():
+            m = Device.objects.get(id=id)
+            m.name = request.POST.get('name'),
+            m.ip_address = request.POST.get('ip_address'),
+            m.ro_community = request.POST.get('ro_community'),
+            m.rw_community = request.POST.get('rw_community'),
+            m.username = request.POST.get('username'),
+            m.password = request.POST.get('password'),
+            m.enable_password = request.POST.get('enable_password'),
+            m.device_type = request.POST.get('device_type')
+            m.save()
+            # 写入成功后,提示修改成功
+            return render(request, 'edit_device.html', {'form': form,
+                                                        'successmessage': '设备添加成功'})
+        else:  # 如果Form校验失败,返回客户在Form中输入的内容和报错信息
+            return render(request, 'edit_device.html', {'form': form})
+
+    else:  # 如果不是POST,就是GET,表示为初始访问, 把特定ID客户在数据库中的值,通过初始值的方式展现给客户看
+        form = EditDeviceForm(initial={'id': infodict['id'],  # initial填写初始值
+                                       'name': infodict['name'],
+                                       'ip_address': infodict['ip_address'],
+                                       'ro_community': infodict['ro_community'],
+                                       'rw_community': infodict['rw_community'],
+                                       'username': infodict['username'],
+                                       'password': infodict['password'],
+                                       'enable_password': infodict['enable_password'],
+                                       'device_type': infodict['device_type']})
+        # 将自动填写好的表单呈现出来
+        return render(request, 'edit_device.html', {'form': form})
 
 
 def delete_device(request, id):

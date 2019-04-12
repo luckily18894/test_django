@@ -23,4 +23,6 @@ urlpatterns = [
     path('', index.index),
     path('add_device', device_mgmt.add_device),
     path('show_device', device_mgmt.show_device),
+    path('edit_device/<int:id>', device_mgmt.edit_device),
+    path('delete_device/<int:id>', device_mgmt.delete_device),
 ]

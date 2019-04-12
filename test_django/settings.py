@@ -25,7 +25,7 @@ SECRET_KEY = '9b+wpu5p6mcmkml27ombi3c$dapn8lvg=m8q^(i#ki-s^0bagd'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.103']
+ALLOWED_HOSTS = ['192.168.1.4']
 
 
 # Application definition
@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'pythondb',  # 数据库名称
         'USER': 'luckily18894',  # 拥有者，这个一般没修改
         'PASSWORD': 'luCKi1y18894',  # 密码，自己设定的
-        'HOST': '192.168.1.110',  # 默认的就没写
+        'HOST': '192.168.1.10',  # 默认的就没写
         'PORT': '',
     }
 }

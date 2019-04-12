@@ -14,12 +14,12 @@
 
 {% block body %}
     <div class="container-fluid">
-        <br><h2 style="color: #666666">设备信息查询</h2><br>
+        <br><h2 style="color: #666666">查询设备信息</h2><br>
     {# 创建显示学员信息的Table,注意id="myTable", 后续DataTable JavaScript就对这个ID的Table进行渲染优化 #}
     <table class="table table-bordered" id="myTable">
       <thead class="thead-dark">
         <tr>
-          <th scope="col">行号</th>
+          <th scope="col">序号</th>
           <th scope="col">设备唯一ID</th>
           <th scope="col">设备名</th>
           <th scope="col">IP地址</th>
@@ -29,7 +29,7 @@
           <th scope="col">SSH密码</th>
           <th scope="col">Enable密码</th>
           <th scope="col">设备类型</th>
-          <th scope="col">修改时间</th>
+          <th scope="col">最后修改时间</th>
           <th scope="col">操作</th>
         </tr>
       </thead>
@@ -53,8 +53,9 @@
           {# onclick="return confirmAct() 用于在删除对象之前显示确认删除的警告信息 #}
           {# data-toggle="tooltip" data-placement="top" title="删除此设备信息" 用于显示按钮的提示信息 #}
           {# class="badge badge-danger" class="badge badge-success" bootstrap渲染按钮的类型 #}
-          <td><a href="{{ device.id_delete }}" onclick="return confirmAct();" data-toggle="tooltip" data-placement="top" title="删除此设备信息" class="badge badge-danger">删除</a>
+          <td>
               <a href="{{ device.id_edit }}"  data-toggle="tooltip" data-placement="top" title="编辑此设备信息" class="badge badge-success">编辑</a>
+              <a href="{{ device.id_delete }}" onclick="return confirmAct();" data-toggle="tooltip" data-placement="top" title="删除此设备信息" class="badge badge-danger">删除</a>
           </td>
         </tr>
         {% endfor %}

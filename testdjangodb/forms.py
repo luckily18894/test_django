@@ -27,6 +27,8 @@ class DeviceForm(forms.Form):
     # label后面填写的内容,在表单中显示为名字,
     # 必选(required=True其实是默认值)
     # attrs={"class": "form-control"} 主要作用是style it in Bootstrap
+
+    # 设备名称
     name = forms.CharField(max_length=50,
                            min_length=2,
                            label='设备名称',
@@ -105,5 +107,111 @@ class DeviceForm(forms.Form):
             raise forms.ValidationError("用户名和密码需要同时填写")
         # 如果同时存在就返回密码
         return password
+
+
+class EditDeviceForm(forms.Form):
+    required_css_class = 'required'
+    # 会给编辑账号人员显示客户唯一ID(数据库的唯一ID),但是这个ID为只读'readonly': True
+    id = forms.CharField(label='设备唯一ID',
+                         widget=forms.TextInput(attrs={"class": "form-control", 'readonly': True}))
+    # 设备名称
+    name = forms.CharField(max_length=50,
+                           min_length=2,
+                           label='设备名称',
+                           required=True,
+                           widget=forms.TextInput(attrs={"class": "form-control"}))
+    # IP地址
+    ip_address = forms.GenericIPAddressField(label='IP地址',
+                                             required=True,
+                                             widget=forms.TextInput(attrs={"class": "form-control"}))
+    # 只读Community
+    ro_community = forms.CharField(max_length=50,
+                                   min_length=2,
+                                   label='只读Community',
+                                   required=True,
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
+
+    # 读写Community
+    rw_community = forms.CharField(max_length=50,
+                                   min_length=2,
+                                   label='读写Community',
+                                   required=False,
+                                   widget=forms.TextInput(attrs={"class": "form-control"}))
+
+    # SSH用户名
+    username = forms.CharField(max_length=50,
+                               min_length=2,
+                               label='SSH用户名',
+                               required=True,
+                               widget=forms.TextInput(attrs={"class": "form-control"}))
+
+    # SSH密码
+    password = forms.CharField(max_length=50,
+                               min_length=2,
+                               label='SSH密码',
+                               required=False,
+                               widget=forms.PasswordInput(attrs={"class": "form-control"}))
+
+    # enable密码
+    enable_password = forms.CharField(max_length=50,
+                                      min_length=2,
+                                      label='enable密码',
+                                      required=False,
+                                      widget=forms.PasswordInput(attrs={"class": "form-control"}))
+
+    # 设备类型
+    device_type_choices = (('firewall', 'firewall'), ('Router', 'Router'), ('Switch', 'Switch'))
+    device_type = forms.CharField(max_length=10,
+                                  label='设备类型',
+                                  widget=forms.Select(choices=device_type_choices, attrs={"class": "form-control"}))
+
+    def clean_name(self):
+        name = self.cleaned_data['name']
+        # 在编辑的时候,校验电话号码与创建不同,因为其实数据库里边已经有一个自己这个条目的电话号码了!
+        # 所以要排除自己ID查到的电话号码,如果其他ID依然存在相同的电话号码,就校验失败
+        count = 0
+        for i in Device.objects.filter(name=name):
+            if int(i.id) != int(self.cleaned_data['id']):
+                count += 1
+
+        if count >= 1:
+            raise forms.ValidationError("该名称已存在")
+        return name
+
+    def clean_ip_address(self):
+        ip_address = self.cleaned_data['ip_address']
+
+        count = 0
+        for i in Device.objects.filter(ip_address=ip_address):
+            if int(i.id) != int(self.cleaned_data['id']):
+                count += 1
+
+        if count >= 1:
+            raise forms.ValidationError("该IP地址已存在")
+        return ip_address
+
+    def clean_password(self):  # 对密码是否与用户名同时存在进行校验，注意格式为clean+校验变量
+        password = self.cleaned_data['password']  # 提取客户输入的密码
+        username = self.cleaned_data['username']  # 提取客户输入的用户名
+        # 如果用户名和密码没有同时存在，就显示校验错误信息
+        if not (password and username):
+            raise forms.ValidationError("用户名和密码需要同时填写")
+        # 如果同时存在就返回密码
+        return password
+
+
+class UserForm(forms.Form):
+    username = forms.CharField(label='用户名',
+                               max_length=100,
+                               required=True,
+                               widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "用户名"})
+                               )
+    password = forms.CharField(label='密码',
+                               max_length=100,
+                               required=True,
+                               widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "密码"})
+                               )
+
+
 
 

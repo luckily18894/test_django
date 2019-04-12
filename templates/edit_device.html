@@ -11,12 +11,12 @@ label.required::before {
 {% endblock head %}
 
 {% block title %}
-    添加设备信息
+    编辑设备信息
 {% endblock title %}
 
 {% block body %}
     <div class="container">
-        <br><h2 style="color: #666666">添加设备信息</h2><br>
+        <br><h2 style="color: #666666">编辑设备信息</h2><br>
 
         {% if successmessage %}
             <span class="message"><div class="alert alert-success" role="alert">{{ successmessage }}</div></span>
@@ -31,18 +31,14 @@ label.required::before {
         {% endif %}
 
         <form action="" method="post">
-            {# CSRF跨站请求伪造 #}
-            {# 添加CSRF防护的隐含参数Token,这是必须配置内容,并不是可选,注意使用render来渲染页面 #}
-            {# <input type="hidden" name="csrfmiddlewaretoken" value="BuPkZVju5knmAuRpSZi5C3GMJh8U9IXFhPixPfQ1PDPmDZfeknt1hHREYlZkrvJZ">#}
+            {# 添加CSRF防护的隐含参数Token,主要必须使用render来渲染页面 #}
             {% csrf_token %}
 
             {% for field in form %}
                 <div class=form-group>
-                    {# 手动渲染表单参考文档 #}
-                    {# https://docs.djangoproject.com/en/dev/topics/forms/#rendering-fields-manually #}
                     {# 如果出现Form错误(各种校验错误),在Form展示给客户看 #}
                     {% if field.errors %}
-                    {# 调整了bootstrap的显示样式 https://getbootstrap.com/docs/4.1/components/alerts/#}
+                    {# 调整了bootstrap的显示样式 #}
                     <div class="alert alert-danger" role="alert">{{ field.errors }}</div>
                     {% endif %}
                     {# 显示字段的label(名字) #}
@@ -51,9 +47,8 @@ label.required::before {
                     {{ field }}
                 </div>
             {% endfor %}
-            {# 调整了bootstrap的显示样式 https://getbootstrap.com/docs/4.1/components/buttons/#button-tags#}
+            {# 调整了bootstrap的显示样式 #}
             <input class="btn btn-primary btn-lg" type='submit' value='提交'>
         </form>
     </div>
 {% endblock body %}
-
