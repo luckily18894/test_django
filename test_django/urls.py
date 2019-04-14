@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from views import index, device_mgmt
+from views import index, device_mgmt, device_monitor
 
 
 urlpatterns = [
@@ -25,4 +25,6 @@ urlpatterns = [
     path('show_device', device_mgmt.show_device),
     path('edit_device/<int:id>', device_mgmt.edit_device),
     path('delete_device/<int:id>', device_mgmt.delete_device),
+    path('device_monitor', device_monitor.device_monitor),
+    path('device_monitor/<str:chart_type>/<int:deviceid>/', device_monitor.chart_json),
 ]
