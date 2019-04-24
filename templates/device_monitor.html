@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    设备状态监控
+{% endblock title %}
+
+{% block js %}
+    <!-- 加载Chart.js的JS文件 -->
+    <!-- 最新的Chart JS 文件 https://cdnjs.com/libraries/Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+    <!-- 加载本项目创建的chart_json_functions.js的JS文件-->
+    {% load static %}
+    <script src="{% static "js/chart_json_functions.js" %}"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.0/jquery.min.js"></script>
+{% endblock js %}
+
+{% block body %}
+<div class="container-fluid">
+    <br><h2 style="color: #666666">设备状态监控</h2><br>
+
+
+     <!-- 第一行图 -->
+     <div class="row">
+        <div class="col-sm-6">
+
+            <div class="card">
+
+                <div class="card-header">绘图测试一</div>
+                <div class="card-body">
+                    <!-- 图表会被绘制在下面的canvas内 -->
+                    <canvas id="chart1"></canvas>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">绘图测试二</div>
+                <div class="card-body">
+                    <!-- 图表会被绘制在下面的canvas内 -->
+                    <canvas id="chart2"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" language="javascript">
+
+    {#<!-- 下面的任务是提供一个初始化的图表展示,如果没有这个部分,默认图表内容为空白 -->#}
+    get_json_render_chart('/device_monitor/line/1/', "chart1", "line", "CPU利用率");
+    get_json_render_chart('/device_monitor/line/2/', "chart2", "line","MEM利用率");
+</script>
+
+
+<!-- 第二行图 -->
+<div class="row py-2">
+    <div class="col-md-3 py-1">
+        <div class="card">
+            <div class="card-header">绘图测试三</div>
+            <div class="card-body">
+                <canvas id="chDonut1" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 py-1">
+        <div class="card">
+            <div class="card-header">绘图测试四</div>
+            <div class="card-body">
+                <canvas id="chart8" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 py-1">
+        <div class="card">
+            <div class="card-header">绘图测试五</div>
+            <div class="card-body">
+                <canvas id="chDonut3" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 py-1">
+        <div class="card">
+            <div class="card-header">绘图测试六</div>
+            <div class="card-body">
+                <canvas id="chDonut4" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" language="javascript">
+    // 通过URL获取JSON数据,并且渲染饼状图
+    get_json_render_chart('/device_monitor/pie/3/', "chDonut1", "pie");
+    get_json_render_chart('/device_monitor/line/4/', "chart8", "line");
+    get_json_render_chart('/device_monitor/pie/5/', "chDonut3", "pie");
+    get_json_render_chart('/device_monitor/pie/6/', "chDonut4", "pie");
+</script>
+
+
+<!-- 第三行图 -->
+<div class="row py-2">
+    <div class="col-md-6 py-1">
+        <div class="card">
+            <div class="card-header">绘图测试7</div>
+            <div class="card-body">
+                <canvas id="chart3"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 py-1">
+        <div class="card">
+            <div class="card-header">绘图测试8</div>
+            <div class="card-body">
+                <canvas id="chart4"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" language="javascript">
+    get_json_render_chart('/device_monitor/bar/7/', "chart3", "bar", "接口xx利用率");
+    get_json_render_chart('/device_monitor/bar/8/', "chart4", "bar", "接口xx利用率");
+</script>
+
+</div>
+{% endblock body %}
+
+
