@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}
+    文件上传
+{% endblock title %}
+
+{% block body %}
+<div class="container-fluid">
+    <br><h2 style="color: #666666">文件上传</h2>
+        <form action="" method="post" enctype="multipart/form-data">
+                    {# CSRF跨站请求伪造 #}
+                    {# 添加CSRF防护的隐含参数Token,这是必须配置内容,并不是可选,注意使用render来渲染页面 #}
+                    {# <input type="hidden" name="csrfmiddlewaretoken" value="BuPkZVju5knmAuRpSZi5C3GMJh8U9IXFhPixPfQ1PDPmDZfeknt1hHREYlZkrvJZ">#}
+                    {% csrf_token %}
+
+
+                    <div class=form-group>
+                        {# 多文件上传需要使用multiple #}
+                        <input type="file" name="files[]" multiple>
+                    </div>
+
+                    {# 调整了bootstrap的显示样式 https://getbootstrap.com/docs/4.1/components/buttons/#button-tags#}
+                    <input class="btn btn-primary btn-lg" type='submit' value='提交'><br>
+                    {# 每一个文件处理结果的信息会显示到这里 #}
+                    {# 根据处理结果的不同,使用不同的颜色 #}
+                    {% for message in messages %}
+                        {% if "上传成功" in message %}
+                            <span class="message" style="color: greenyellow">&nbsp;{{ message }}</span>
+                        {% elif "已经覆盖上一次批改" in message %}
+                            <span class="message" style="color: dodgerblue">&nbsp;{{ message }}</span>
+                        {% else %}
+                            <span class="message" style="color: red">&nbsp;{{ message }}</span>
+                        {% endif %}
+                        <br>
+                    {% endfor %}
+                </form>
+</div>
+{% endblock body %}

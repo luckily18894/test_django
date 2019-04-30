@@ -32,3 +32,14 @@ class Device(models.Model):
     create_date = models.DateTimeField(auto_now_add=True)
     # create_date = timezone.now()
 
+
+class Ospath(models.Model):
+    upload_file_path = models.CharField(max_length=100, blank=False)
+
+
+class UploadFile(models.Model):
+    upload_filename = models.CharField(max_length=100, blank=False)
+    os_filename = models.CharField(max_length=100, blank=False)
+    upload_time = models.DateTimeField(auto_now_add=True)
+
+
