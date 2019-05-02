@@ -27,6 +27,7 @@ urlpatterns = [
     path('device_monitor', device_monitor.device_monitor),
     path('device_monitor/<str:chart_type>/<int:deviceid>/', device_monitor.chart_json),
     path('file_mgmt', file_mgmt.upload),
+    path('download/<int:id>', file_mgmt.download),
     path('accounts/login/', login_system.loginweb),
     path('accounts/logout/', login_system.logoutweb),
 ]

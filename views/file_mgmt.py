@@ -7,6 +7,10 @@ import os
 from django.http import StreamingHttpResponse
 from django.utils.http import urlquote
 
+
+# des = Ospath(upload_file_path='/UploadFile')
+# des.save()
+
 file_os_path = Ospath.objects.get(id=1).upload_file_path
 
 
@@ -19,11 +23,14 @@ def upload(request):
             # file.content_type 文件类型
             # file.size 文件大小(可以考虑对文件大小进行限制)
 
+            # ↓测试判断文件类型有问题，暂时先不做判断
+            # ↓测试判断文件类型有问题，暂时先不做判断
             # 通过测试发现doc和docx的文件类型都是"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            if file.content_type != "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                # 把此文件的错误信息, 放入messages清单, 并使用continue跳过此文件
-                messages.append(file.name + ":文件格式并不是doc或者docx!")
-                continue
+            # # print(file.content_type)
+            # if file.content_type != "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+            #     # 把此文件的错误信息, 放入messages清单, 并使用continue跳过此文件
+            #     messages.append(file.name + ":文件格式并不是doc或者docx!")
+            #     continue
 
             # 读取二进制数据
             bit_file = file.file.read()
@@ -32,11 +39,13 @@ def upload(request):
             # 获取上传文件的文件名
             upload_file_name = file.name
             # 获取上传文件的扩展名
+            # print(upload_file_name)
             upload_file_name_ext = os.path.splitext(upload_file_name)[1]
+            # print(upload_file_name_ext)
             # 写入OS的文件名, HASH 加上 上传文件的扩展名
             os_filename = file_hash_name + upload_file_name_ext
             # 写入文件
-            checked_file = open(file_os_path + os_filename, 'wb')
+            checked_file = open(file_os_path + '/' + os_filename, 'wb')
             checked_file.write(bit_file)
             checked_file.close()
 
@@ -53,7 +62,7 @@ def upload(request):
 
 def download(request, id):
     uploadfile = UploadFile.objects.get(id=id)
-    uploadfile_bitfile = open(file_os_path + uploadfile.os_filename, 'rb')
+    uploadfile_bitfile = open(file_os_path + '/' + uploadfile.os_filename, 'rb')
     response = StreamingHttpResponse(uploadfile_bitfile)
     response['Content-Type'] = 'application/octet-stream'
     # 使用urlquote解决中文文件名问题, 是否火狐依然有问题
